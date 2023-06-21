@@ -16,8 +16,8 @@ var (
 	oauthConfFb = &oauth2.Config{
 		ClientID:     "",
 		ClientSecret: "",
-		RedirectURL:  "http://localhost:9090/callback-fb",
-		Scopes:       []string{"public_profile"},
+		RedirectURL:  "http://localhost:8080/callback-fb",
+		Scopes:       []string{"public_profile", "email"},
 		Endpoint:     facebook.Endpoint,
 	}
 	oauthStateStringFb = ""
@@ -75,9 +75,9 @@ func CallBackFromFacebook(w http.ResponseWriter, r *http.Request) {
 		logger.Log.Info("TOKEN>> Expiration Time>> " + token.Expiry.String())
 		logger.Log.Info("TOKEN>> RefreshToken>> " + token.RefreshToken)
 
-		logger.Log.Info("https://graph.facebook.com/me?access_token=" + url.QueryEscape(token.AccessToken) + "&fields=email")
+		logger.Log.Info("https://graph.facebook.com/me?access_token=" + url.QueryEscape(token.AccessToken) + "&fields=email,picture")
 		resp, err := http.Get("https://graph.facebook.com/me?access_token=" +
-			url.QueryEscape(token.AccessToken) + "&fields=email")
+			url.QueryEscape(token.AccessToken) + "&fields=email,picture")
 		if err != nil {
 			logger.Log.Error("Get: " + err.Error() + "\n")
 			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
